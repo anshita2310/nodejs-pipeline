@@ -3,6 +3,9 @@
 
 name: Build and deploy Node.js app to Azure Web App - nodejs1-test
 
+ variables:
+    npm_config_cache: $(Pipeline.Workspace)/.npm
+
 on:
   push:
     branches:
@@ -32,6 +35,15 @@ jobs:
         with:
           name: node-app
           path: .
+     
+     
+     - name: Cache
+      uses: actions/cache@v3.0.11
+      inputs:          
+        path: $((npm_config_cache)
+        key: 'npm | "$(Agent.OS)" | package.json'
+        restore-keys: npm | "$(Agent.OS)"
+        upload-chunk-size: # optional
 
   deploy:
     runs-on: ubuntu-latest
